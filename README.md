@@ -7,3 +7,5 @@ source env/bin/activate
 env/bin/python3.10 -m pip install -r requirements.txt
 ### run fastapi APP on port: 8000
 uvicorn app.main:app --port 8000 --reload
+
+![image](https://user-images.githubusercontent.com/40237958/178517135-80842748-2266-4e26-87b6-951f3557921a.png)
