@@ -1,7 +1,7 @@
 # Fast-Api-test-project-11.07.2022
 test task
 
-### activate venv (python3.10.5)
+### activate venv ([python3.10.5](https://github.com/reset54/instructions_54/blob/main/python3.10.5_on_debian_installer.sh "установка Python3.10.5"))
 source env/bin/activate
 ### install libs from requirements.txt
 env/bin/python3.10 -m pip install -r requirements.txt
