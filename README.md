@@ -1,17 +1,11 @@
 # Fast-Api-test-project-11.07.2022
 test task
 
-# activate venv (python3.10.5)
+### activate venv ([python3.10.5](https://github.com/reset54/instructions_54/blob/main/python3.10.5_on_debian_installer.sh "установка Python3.10.5"))
 source env/bin/activate
-# install libs from requirements.txt
+### install libs from requirements.txt
 env/bin/python3.10 -m pip install -r requirements.txt
-# run fastapi APP on port: 8000
+### run fastapi APP on port: 8000
 uvicorn app.main:app --port 8000 --reload
 
-# if reload web page:
-INFO:     127.0.0.1:62985 - "GET / HTTP/1.1" 200 OK
-    raise WebSocketDisconnect(message["code"])
-starlette.websockets.WebSocketDisconnect: 1001
-INFO:     connection closed
-INFO:     ('127.0.0.1', 62991) - "WebSocket /ws" [accepted]
-INFO:     connection open
+![image](https://user-images.githubusercontent.com/40237958/178517135-80842748-2266-4e26-87b6-951f3557921a.png)
