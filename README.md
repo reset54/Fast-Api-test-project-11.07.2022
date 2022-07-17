@@ -5,7 +5,7 @@ test task
 source env/bin/activate
 ### install libs from requirements.txt
 env/bin/python3.10 -m pip install -r requirements.txt
-### run fastapi APP on port: 8000
-uvicorn app.main:app --port 8000 --reload
+### run fastapi APP
+python3.10 main.py
 
 ![image](https://user-images.githubusercontent.com/40237958/178517135-80842748-2266-4e26-87b6-951f3557921a.png)
