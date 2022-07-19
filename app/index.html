@@ -2,17 +2,63 @@
 <html>
     <head>
         <title>Message sender</title>
+        
+        <!-- CSS -->
+        <style type="text/css">
+            input {
+                display: block;
+                font-size: 18px;
+                padding: 15px;
+                margin-bottom: 10px;
+                outline: none;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
+
+            form {
+                width: 100%;
+            }
+
+            body {
+                background-color: ghostwhite;
+            }
+        </style>
+
+        <!-- JS -->
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", function(){
+                console.log("start find button")
+                let button = document.querySelector("button[name='sendmessage']");
+                button.style.backgroundColor = "yellow";
+                console.log("find button - ok!")
+
+                button.addEventListener("click", async function(event) {
+                    event.preventDefault()
+                    let message = document.querySelector("input[name='message']").value;
+                    console.log(message)
+                    
+                    let response = await fetch("/", {                                   // return json response to path='/'
+                        method: "POST",
+                        body: new FormData(document.querySelector('form'))        // get message from form
+                    });
+                    
+                    // let responseText = response.text();
+                    // console.log('Response text is', responseText);
+
+                });
+            });
+        </script>
     </head>
     <body>
         <h1>Message Sender</h1>
-        <form onsubmit="main.send_message_from_form()" method="post">
-            <input type="text" id="messageText" autocomplete="off" placeholder="Please enter message here"/>
-            <button>Send Message</button>
+        <form method="POST" action="/">
+            <input type="text" name="message" placeholder="Please enter message here"/>
+            <button name="sendmessage">Send Message</button>
         </form>
-        <!--Numeric list messages-->
+        <!--Numeric list messages
         <ol id='messages'>
         </ol>
-        
+        -->
     </body>
 </html>
 
@@ -36,4 +82,5 @@
                     event.preventDefault()
                 };
             </script> 
-        -->
+
+-->
