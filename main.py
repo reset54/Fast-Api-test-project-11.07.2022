@@ -1,15 +1,16 @@
 #!/usr/bin/env python
-from fastapi import FastAPI #, WebSocket
+from fastapi import FastAPI, Form #, WebSocket
 from loguru import logger
 from fastapi.responses import Response
 import socket
 import json
+import asyncio
 
 
 app = FastAPI()
 
 
-# const
+# constants
 IP = "127.0.0.1"
 PORT = 8000
 HDRS = 'HTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\n\r\n'
@@ -23,42 +24,48 @@ def start_server():
     """
     # try:
     logger.info("start server")
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                  # TCP; SOCK_STREAM: int; 
-    server.bind((IP, PORT))                                                     # tuple
-    server.listen(5)
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)                  # TCP; SOCK_STREAM: int; 
+    server_socket.bind((IP, PORT))                                                     # tuple
+    server_socket.listen(5)
     while True:
-        logger.info("Start working...")
-        client_socket, address = server.accept()                                # if connection Receive data from the socket.
-        data = client_socket.recv(1024).decode('utf-8')
-        content = reload_page_get_query(data)
-        # return response
+        client_socket, address = server_socket.accept() 
+        logger.info("new connect, receive data from the socket")
+        request_data = client_socket.recv(1024).decode('utf-8')
+        
+        
+        if request_data.split()[0] == "POST": 
+            logger.info(f"{request_data.split()[0]=}")
+            content = send_message_from_form(request_data)
+        else:                                                                           # request_data.split()[0] == "GET":
+            logger.info(f"{request_data.split()[0]=}")
+            content = reload_page_get_query(request_data)
+        # send message
         client_socket.send(content)
         # exit
-        client_socket.shutdown(socket.SHUT_WR)
+        client_socket.close()
     # except KeyboardInterrupt:
-    #     server.close()
+    #     server_socket.close()
     #     print("Server was disconnected, KeyboardInterrupt")
 
 
-@app.get("/")                                                                   # main page                                                               
-def reload_page_get_query(request_data):
+@app.get("/")                                                                           # get <- main page                                                               
+def reload_page_get_query(data):
     ''' reload web page GET-query '''
-    logger.info(f"{request_data=}")
     response = ''
     try:
         with open('app/index.html', 'rb') as file:
             logger.debug("читаем файл")
             response = file.read()
-            # здесь должна быть отправка данных из формы POST-method
         return HDRS.encode('utf-8') + response
     except FileNotFoundError:
         logger.error("Exception файл не найден")
         return HDRS_404.encode('utf-8') + "\nPage Not Found"
 
 
-@app.post("/")                                                                  # main page
-def send_message_from_form(data):
-    return Response(data)
+@app.post("/")                                                                  # post -> main page
+def send_message_from_form(message: str = Form(...)):
+    '''возвращаем данные сообщения из формы POST-методом'''
+    return f"{message}".encode('utf-8')
 
 
 # @app.websocket("/ws")
@@ -74,7 +81,7 @@ def send_message_from_form(data):
 if __name__ == '__main__':
     try:
         while not start_server():
-            logger.debug(f"start new connection to server on {IP}:{PORT}")
+            logger.debug(f"start new connection FROM MAIN to server on {IP}:{PORT}")
             start_server()
     except KeyboardInterrupt:
         print("Server was disconnected, KeyboardInterrupt")
